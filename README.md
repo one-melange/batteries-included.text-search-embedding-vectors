@@ -1,2 +1,2 @@
 # tutorials.text-search-embedding-vectors
-Learn how to create document search pipeline with embedding vectors.
+Learn how to create a document search pipeline with embedding vectors.
