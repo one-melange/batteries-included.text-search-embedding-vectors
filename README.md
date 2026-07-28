@@ -72,6 +72,11 @@ All suites are `unittest`-based and require no running Qdrant or model — Qdran
 and the embedder are stubbed. (`pyproject.toml` configures pytest to discover the
 `*_tests.py` files and put the repo root on the import path.)
 
+The run is **hermetic** — no network access needed. The chunker's `tiktoken`
+`cl100k_base` vocabulary is vendored under
+`packages/vector_search/test/_fixtures/tiktoken_cache`, and `conftest.py` points
+`TIKTOKEN_CACHE_DIR` at it (set the env var yourself to override).
+
 ## Run the demo
 
 Embeds 100 generated documents into Qdrant and runs a few semantic queries. The
