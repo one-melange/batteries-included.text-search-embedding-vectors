@@ -1,0 +1,19 @@
+name: text-search-embedding-vectors
+
+services:
+  qdrant:
+    image: qdrant/qdrant
+    ports:
+      - 6333:6333
+      - 6334:6334
+    volumes:
+      # Vectors/collections live in the named volume below, NOT in the
+      # container. They survive `docker compose stop` and `docker compose down`.
+      - qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+volumes:
+  # Persistent Qdrant storage. Data here outlives container restarts and
+  # `docker compose down`. To wipe it (delete all collections/vectors), run
+  # `docker compose down -v`, which removes named volumes too.
+  qdrant_storage:
