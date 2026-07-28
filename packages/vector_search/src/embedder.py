@@ -19,7 +19,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 import time
 
-from packages.arc.src.vector_search.config import (
+from packages.vector_search.src.config import (
     DEFAULT_OPENAI_EMBED_MODEL,
     EMBED_THREADS,
     LOCAL_INFERENCE_BATCH_SIZE,

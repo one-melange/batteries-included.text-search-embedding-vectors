@@ -8,8 +8,8 @@ scanning, and dimension-mismatch collection recreation in qdrant_store.
 import unittest
 from types import SimpleNamespace
 
-from packages.arc.src.vector_search.models import Chunk, PayloadFields
-from packages.arc.src.vector_search.qdrant_store import (
+from packages.vector_search.src.models import Chunk, PayloadFields
+from packages.vector_search.src.qdrant_store import (
     chunks_to_points,
     content_hash,
     document_key,

@@ -14,7 +14,7 @@ import os
 import unittest
 from unittest import mock
 
-from packages.arc.src.vector_search import config
+from packages.vector_search.src import config
 
 
 class QdrantConnectionConfig(unittest.TestCase):

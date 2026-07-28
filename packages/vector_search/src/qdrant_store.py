@@ -6,8 +6,8 @@ import hashlib
 import logging
 import uuid
 
-from packages.arc.src.vector_search.config import QDRANT_UPSERT_BATCH_SIZE
-from packages.arc.src.vector_search.models import (
+from packages.vector_search.src.config import QDRANT_UPSERT_BATCH_SIZE
+from packages.vector_search.src.models import (
     DEFAULT_PAYLOAD_FIELDS,
     Chunk,
     PayloadFields,

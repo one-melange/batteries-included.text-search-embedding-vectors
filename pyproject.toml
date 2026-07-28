@@ -4,4 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastembed>=0.8.0",
+    "psutil>=7.2.2",
+    "pydantic>=2.13.4",
+    "qdrant-client>=1.18.0",
+    "tiktoken>=0.13.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+# Test modules are named *_tests.py (not the pytest default test_*.py / *_test.py).
+python_files = ["*_tests.py"]
+# Make the repo root importable so `packages.*` absolute imports resolve.
+pythonpath = ["."]

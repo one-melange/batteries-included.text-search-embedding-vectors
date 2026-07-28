@@ -4,7 +4,7 @@ import unittest
 from types import SimpleNamespace
 from unittest import mock
 
-from packages.arc.src.vector_search import embedder as e
+from packages.vector_search.src import embedder as e
 
 
 class _Array:

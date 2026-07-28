@@ -10,8 +10,8 @@ from query-response points to result dicts — no running Qdrant or model needed
 import unittest
 from types import SimpleNamespace
 
-from packages.arc.src.vector_search import search as s
-from packages.arc.src.vector_search.models import PayloadFields
+from packages.vector_search.src import search as s
+from packages.vector_search.src.models import PayloadFields
 
 
 class _FakeEmbedder:

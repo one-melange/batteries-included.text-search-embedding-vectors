@@ -3,11 +3,11 @@
 import unittest
 from unittest import mock
 
-from packages.arc.src.vector_search import embed_pipeline as p
-from packages.arc.src.vector_search.config import MAX_TOKENS_IN_CHUNK
-from packages.arc.src.vector_search.embedder import LazyEmbedder
-from packages.arc.src.vector_search.models import Document
-from packages.arc.src.vector_search.qdrant_store import content_hash, document_key
+from packages.vector_search.src import embed_pipeline as p
+from packages.vector_search.src.config import MAX_TOKENS_IN_CHUNK
+from packages.vector_search.src.embedder import LazyEmbedder
+from packages.vector_search.src.models import Document
+from packages.vector_search.src.qdrant_store import content_hash, document_key
 
 
 def _document(

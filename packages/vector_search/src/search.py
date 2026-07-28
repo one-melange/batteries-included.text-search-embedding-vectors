@@ -10,8 +10,8 @@ import logging
 
 from qdrant_client import QdrantClient
 
-from packages.arc.src.vector_search.embedder import Embedder
-from packages.arc.src.vector_search.models import (
+from packages.vector_search.src.embedder import Embedder
+from packages.vector_search.src.models import (
     DEFAULT_PAYLOAD_FIELDS,
     PayloadFields,
 )

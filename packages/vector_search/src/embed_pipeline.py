@@ -14,7 +14,7 @@ import tiktoken
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct
 
-from packages.arc.src.vector_search.config import (
+from packages.vector_search.src.config import (
     CHUNK_OVERLAP,
     MAX_TOKENS_IN_CHUNK,
     MEM_CEILING_MB,
@@ -24,14 +24,14 @@ from packages.arc.src.vector_search.config import (
     QDRANT_URL,
     TOKENIZER_MODEL,
 )
-from packages.arc.src.vector_search.embedder import Embedder, get_lazy_embedder
-from packages.arc.src.vector_search.models import (
+from packages.vector_search.src.embedder import Embedder, get_lazy_embedder
+from packages.vector_search.src.models import (
     DEFAULT_PAYLOAD_FIELDS,
     Chunk,
     Document,
     PayloadFields,
 )
-from packages.arc.src.vector_search.qdrant_store import (
+from packages.vector_search.src.qdrant_store import (
     DocumentKey,
     chunks_to_points,
     content_hash,
@@ -41,7 +41,7 @@ from packages.arc.src.vector_search.qdrant_store import (
     setup_collection,
     upsert_points,
 )
-from packages.general_utilities.resource_monitor import ResourceMonitor
+from packages.utilities.src.resource_monitor import ResourceMonitor
 
 log = logging.getLogger(__name__)
 
