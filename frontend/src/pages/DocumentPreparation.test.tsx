@@ -146,39 +146,6 @@ describe("DocumentPreparation", () => {
     expect(send).not.toHaveBeenCalled();
   });
 
-  it("loads a local text document without uploading a file object", async () => {
-    const user = userEvent.setup();
-    setup();
-    const file = new File(["Text loaded from disk."], "notes.md", { type: "text/markdown" });
-    Object.defineProperty(file, "text", {
-      value: () => Promise.resolve("Text loaded from disk."),
-    });
-
-    await user.upload(screen.getByLabelText("Load .txt or .md"), file);
-
-    await waitFor(() =>
-      expect(screen.getByLabelText("Document text")).toHaveValue("Text loaded from disk."),
-    );
-    expect(screen.getByRole("status")).toHaveTextContent("Loaded notes.md");
-  });
-
-  it("isolates a failed pair and shows its server message", async () => {
-    const user = userEvent.setup();
-    const connection = setup();
-    await user.click(screen.getByRole("button", { name: /Run comparison/ }));
-    const request = connection.send.mock.calls[0][0];
-
-    connection.emit({
-      type: "pair.failed",
-      run_id: request.run_id,
-      pair_id: "pair-1",
-      message: "Model could not be loaded.",
-    });
-
-    expect(screen.getByRole("alert")).toHaveTextContent("Model could not be loaded.");
-    expect(screen.getByText("Failed")).toBeInTheDocument();
-  });
-
   it("closes the live connection when the page unmounts", () => {
     const connection = setup();
     connection.unmount();

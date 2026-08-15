@@ -58,10 +58,9 @@ async def comparison_socket(websocket: WebSocket) -> None:
     try:
         while True:
             payload = await websocket.receive_json()
-            if active is not None:
-                if not active.done():
-                    active.cancel()
-                with contextlib.suppress(asyncio.CancelledError, Exception):
+            if active is not None and not active.done():
+                active.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
                     await active
 
             try:
@@ -88,8 +87,7 @@ async def comparison_socket(websocket: WebSocket) -> None:
     except WebSocketDisconnect:
         pass
     finally:
-        if active is not None:
-            if not active.done():
-                active.cancel()
-            with contextlib.suppress(asyncio.CancelledError, Exception):
+        if active is not None and not active.done():
+            active.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
                 await active

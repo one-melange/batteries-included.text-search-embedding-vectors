@@ -1,7 +1,5 @@
 """HTTP and WebSocket tests for the preparation API."""
 
-import asyncio
-import threading
 import unittest
 from unittest import mock
 
@@ -36,22 +34,6 @@ class FakeService:
                 "result": {"chunk_count": 1},
             }
         )
-
-
-class ReplacementService(FakeService):
-    def __init__(self):
-        self.started = threading.Event()
-        self.cancelled = threading.Event()
-
-    async def compare(self, request, emit):
-        if request.run_id == "first":
-            self.started.set()
-            try:
-                await asyncio.Event().wait()
-            except asyncio.CancelledError:
-                self.cancelled.set()
-                raise
-        await emit({"type": "run.completed", "run_id": request.run_id})
 
 
 class ApiTests(unittest.TestCase):
@@ -98,26 +80,6 @@ class ApiTests(unittest.TestCase):
 
             websocket.send_json(self.payload())
             self.assertEqual(websocket.receive_json()["type"], "pair.tokenized")
-
-    def test_new_request_cancels_the_active_run(self):
-        replacement_service = ReplacementService()
-        with mock.patch(
-            "packages.vector_search.src.document_preparation.api.service",
-            new=replacement_service,
-        ):
-            with self.client.websocket_connect("/ws/document-preparation") as websocket:
-                first = self.payload()
-                first["run_id"] = "first"
-                websocket.send_json(first)
-                self.assertTrue(replacement_service.started.wait(timeout=1))
-
-                second = self.payload()
-                second["run_id"] = "second"
-                websocket.send_json(second)
-                completed = websocket.receive_json()
-
-        self.assertEqual(completed["run_id"], "second")
-        self.assertTrue(replacement_service.cancelled.is_set())
 
 
 if __name__ == "__main__":

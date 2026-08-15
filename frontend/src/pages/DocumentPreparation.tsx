@@ -207,7 +207,7 @@ export function DocumentPreparation(props: DocumentPreparationProps) {
     <main>
       <section class="hero">
         <div>
-          <span class="kicker">Document Preparation</span>
+          <span class="kicker">Preparation playground</span>
           <h1>See what your vectors will inherit.</h1>
           <p>
             Compare token boundaries first, then watch four chunking strategies reshape the same document—side by side, as each result arrives.

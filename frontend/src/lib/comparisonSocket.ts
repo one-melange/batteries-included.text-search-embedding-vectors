@@ -46,7 +46,6 @@ export const createComparisonSocket: SocketFactory = (onEvent, onConnectionError
     });
     socket.addEventListener("close", () => {
       socket = undefined;
-      if (queued && !closed) window.setTimeout(connect, 250);
     });
   };
 
