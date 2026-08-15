@@ -14,7 +14,10 @@ function websocketUrl(): string {
   const configured = import.meta.env.VITE_DOCUMENT_PREPARATION_WS_URL;
   if (configured) return configured;
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-  return `${protocol}//${window.location.host}/ws/document-preparation`;
+  const host = import.meta.env.DEV
+    ? `${window.location.hostname}:8000`
+    : window.location.host;
+  return `${protocol}//${host}/ws/document-preparation`;
 }
 
 export const createComparisonSocket: SocketFactory = (onEvent, onConnectionError) => {

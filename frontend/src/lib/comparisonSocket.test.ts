@@ -50,6 +50,7 @@ describe("createComparisonSocket", () => {
     const client = createComparisonSocket(vi.fn(), vi.fn());
     const instance = FakeWebSocket.instances[0];
 
+    expect(instance.url).toBe("ws://localhost:8000/ws/document-preparation");
     client.send(request);
     expect(instance.send).not.toHaveBeenCalled();
     instance.trigger("open");
