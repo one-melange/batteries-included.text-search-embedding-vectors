@@ -47,6 +47,7 @@ packages/
   utilities/
     src/resource_monitor.py  # psutil CPU/RSS sampler used by the pipeline
 scripts/
+  launch_app.sh        # installs dependencies and starts the API and frontend
   run_demo.py           # embeds 100 generated docs, then searches
 frontend/               # SolidJS Document Preparation application
 docker-compose.yaml     # local Qdrant service
@@ -109,21 +110,16 @@ The `/document-preparation` page compares up to four pairs at once from this
 | quicktok (`cl100k_base`) | Chonkie `SemanticChunker` |
 | SentencePiece (`google-t5/t5-small`) | LlamaIndex `SentenceSplitter` |
 
-Start the Python API and frontend in separate terminals:
+Install dependencies and start the Python API and SolidJS frontend together:
 
 ```bash
-uv run uvicorn \
-  packages.vector_search.src.document_preparation.api:app \
-  --reload
+./scripts/launch_app.sh
 ```
 
-```bash
-./scripts/launch_frontend.sh
-```
-
-The launcher runs a frozen Bun install before starting Vite, so `node_modules`
-is automatically reconciled whenever `bun.lock` changes. Pass Vite options such
-as `--host 0.0.0.0` directly to the script when needed.
+The launcher runs frozen `uv` and Bun installs before starting Uvicorn and Vite,
+so both environments are reconciled whenever their lockfiles change. Stopping
+the launcher stops both services. Pass Vite options such as `--host 0.0.0.0`
+directly to the script when needed.
 
 Open `http://localhost:5173/document-preparation`. Paste text or load a `.txt`
 or `.md` file, select one to four unique pairs, and run the comparison. Each
