@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import ABC, abstractmethod
 from functools import lru_cache
 
@@ -12,6 +13,14 @@ from packages.vector_search.src.document_preparation.tokenizers import Tokenizer
 CHONKIE_EMBEDDING_MODEL = os.environ.get(
     "DOCUMENT_PREPARATION_CHONKIE_MODEL", "minishlab/potion-base-32M"
 )
+
+_SENTENCE_BOUNDARY = re.compile(r"(?<=[.!?])\s+|\n+")
+
+
+def _split_sentences(text: str) -> list[str]:
+    """Split sentences without loading LlamaIndex's bundled NLTK corpus."""
+
+    return [part for part in _SENTENCE_BOUNDARY.split(text) if part]
 
 
 def _locate_chunks(text: str, chunks: list[str]) -> list[RawChunk]:
@@ -200,6 +209,7 @@ class LlamaIndexChunker(ChunkerAdapter):
             chunk_size=chunk_size,
             chunk_overlap=overlap,
             tokenizer=tokenizer.encode_ids,
+            chunking_tokenizer_fn=_split_sentences,
         )
         return _locate_chunks(text, splitter.split_text(text)) or [
             RawChunk(text="", start=0, end=0)

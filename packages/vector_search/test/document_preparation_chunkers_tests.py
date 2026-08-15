@@ -93,6 +93,12 @@ class ChunkerAdapterTests(unittest.TestCase):
         self.assertEqual((chunks[1].start, chunks[1].end), (8, 11))
         self.assertIsNone(chunks[2].start)
 
+    def test_llamaindex_sentence_splitter_is_local_and_deterministic(self):
+        self.assertEqual(
+            module._split_sentences("First sentence. Second sentence!\nThird one?"),
+            ["First sentence.", "Second sentence!", "Third one?"],
+        )
+
     def test_normalizer_returns_an_empty_chunk_for_no_semantic_output(self):
         self.assertEqual(
             module._normalize_semantic_chunks([], self.tokenizer, 20, 2),

@@ -32,7 +32,7 @@ jobs:
         run: uv sync --frozen --python ${{ matrix.python-version }}
 
       - name: Run unit tests
-        run: uv run pytest packages/vector_search/test -v
+        run: uv run --python ${{ matrix.python-version }} pytest packages/vector_search/test -v
 
   frontend:
     name: SolidJS tests and build
