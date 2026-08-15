@@ -1,11 +1,15 @@
-# tutorials.text-search-embedding-vectors
+# batteries-included.text-search-embedding-vectors
 
-Learn how to create a document search pipeline with embedding vectors.
+Create a document search pipeline with embedding vectors.
 
-A small, self-contained tutorial that turns arbitrary documents into a
+The goal is to be up and running in under 30 minutes, hence why this is part of my "batteries-included" series.
+
+This is a small, self-contained projects that turns arbitrary documents into a
 searchable [Qdrant](https://qdrant.tech/) collection: chunk text, embed it
 (OpenAI or a local model), upsert the vectors, and run semantic search — with
 incremental re-indexing so unchanged documents are skipped on later runs.
+
+There are also plenty of knobs you can adjust and play with, helping you see how your search quality and relevance is affected.
 
 ## How it works
 
