@@ -67,11 +67,6 @@ docker-compose.yaml     # local Qdrant service
 # Install dependencies into a 3.14 virtualenv (.venv) from uv.lock
 uv sync
 
-# Install the SolidJS frontend
-cd frontend
-bun install --frozen-lockfile
-cd ..
-
 # Start the local Qdrant instance (http://localhost:6333)
 docker compose up -d qdrant
 ```
