@@ -58,7 +58,7 @@ docker-compose.yaml     # local Qdrant service
 - [uv](https://docs.astral.sh/uv/) (Python package/venv manager)
 - Python 3.14 (pinned in `.python-version`; `requires-python = ">=3.12"`)
 - Docker (for the local Qdrant instance)
-- Node.js 24 and pnpm 11 (for the comparison frontend)
+- Bun 1.3.14 (for the comparison frontend)
 
 ## Setup
 
@@ -68,7 +68,7 @@ uv sync
 
 # Install the SolidJS frontend
 cd frontend
-pnpm install --frozen-lockfile
+bun install --frozen-lockfile
 cd ..
 
 # Start the local Qdrant instance (http://localhost:6333)
@@ -84,8 +84,8 @@ for every setting and its default. Nothing needs editing to run locally.
 uv run pytest packages/vector_search/test -v
 
 cd frontend
-pnpm test
-pnpm build
+bun run test
+bun run build
 ```
 
 All suites are `unittest`-based and require no running Qdrant or model — Qdrant
@@ -118,9 +118,12 @@ uv run uvicorn \
 ```
 
 ```bash
-cd frontend
-pnpm dev
+./scripts/launch_frontend.sh
 ```
+
+The launcher runs a frozen Bun install before starting Vite, so `node_modules`
+is automatically reconciled whenever `bun.lock` changes. Pass Vite options such
+as `--host 0.0.0.0` directly to the script when needed.
 
 Open `http://localhost:5173/document-preparation`. Paste text or load a `.txt`
 or `.md` file, select one to four unique pairs, and run the comparison. Each
