@@ -33,3 +33,31 @@ jobs:
 
       - name: Run unit tests
         run: uv run pytest packages/vector_search/test -v
+
+  frontend:
+    name: SolidJS tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run frontend unit tests
+        run: pnpm test
+
+      - name: Type-check and build frontend
+        run: pnpm build
