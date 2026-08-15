@@ -1,6 +1,7 @@
 # batteries-included.text-search-embedding-vectors
 
-Create a document search pipeline with embedding vectors.
+Create a document search pipeline with embedding vectors and compare how
+tokenizer/chunker choices prepare documents before indexing.
 
 The goal is to be up and running in under 30 minutes, hence why this is part of my "batteries-included" series.
 
@@ -9,13 +10,16 @@ searchable [Qdrant](https://qdrant.tech/) collection: chunk text, embed it
 (OpenAI or a local model), upsert the vectors, and run semantic search — with
 incremental re-indexing so unchanged documents are skipped on later runs.
 
-There are also plenty of knobs you can adjust and play with, helping you see how your search quality and relevance is affected.
+There are also plenty of knobs you can adjust and play with, helping you see how your search quality and relevance is affected. The SolidJS comparison UI makes the preparation stage visible: it streams decoded tokens first, then the resulting chunks.
 
 ## How it works
 
 ```
 documents ──▶ chunk ──▶ embed ──▶ upsert to Qdrant ──▶ search
              (tiktoken)  (OpenAI / fastembed / sentence-transformers)
+
+document ──▶ tokenize ──▶ chunk ──▶ compare decoded results in the browser
+              × 4         × 4
 ```
 
 - **Incremental**: each document's text is hashed; unchanged documents are
@@ -32,6 +36,7 @@ documents ──▶ chunk ──▶ embed ──▶ upsert to Qdrant ──▶ s
 packages/
   vector_search/
     src/
+      document_preparation/ # tokenizer/chunker adapters + WebSocket API
       config.py         # env-backed settings
       models.py         # Document / Chunk / PayloadFields
       embedder.py       # OpenAI / fastembed / sentence-transformers backends
@@ -42,7 +47,9 @@ packages/
   utilities/
     src/resource_monitor.py  # psutil CPU/RSS sampler used by the pipeline
 scripts/
+  launch_app.sh        # installs dependencies and starts the API and frontend
   run_demo.py           # embeds 100 generated docs, then searches
+frontend/               # SolidJS Document Preparation application
 docker-compose.yaml     # local Qdrant service
 .env.example            # every configurable environment variable, documented
 ```
@@ -52,6 +59,7 @@ docker-compose.yaml     # local Qdrant service
 - [uv](https://docs.astral.sh/uv/) (Python package/venv manager)
 - Python 3.14 (pinned in `.python-version`; `requires-python = ">=3.12"`)
 - Docker (for the local Qdrant instance)
+- Bun 1.3.14 (for the comparison frontend)
 
 ## Setup
 
@@ -70,6 +78,10 @@ for every setting and its default. Nothing needs editing to run locally.
 
 ```bash
 uv run pytest packages/vector_search/test -v
+
+cd frontend
+bun run test
+bun run build
 ```
 
 All suites are `unittest`-based and require no running Qdrant or model — Qdrant
@@ -80,6 +92,39 @@ The run is **hermetic** — no network access needed. The chunker's `tiktoken`
 `cl100k_base` vocabulary is vendored under
 `packages/vector_search/test/_fixtures/tiktoken_cache`, and `conftest.py` points
 `TIKTOKEN_CACHE_DIR` at it (set the env var yourself to override).
+
+## Document Preparation UI
+
+The `/document-preparation` page compares up to four pairs at once from this
+16-pair matrix:
+
+| Tokenizers | Chunkers |
+| --- | --- |
+| tiktoken (`cl100k_base`) | LangChain `RecursiveCharacterTextSplitter` |
+| Hugging Face Tokenizers (`bert-base-uncased`) | semchunk heuristic chunker |
+| quicktok (`cl100k_base`) | Chonkie `SemanticChunker` |
+| SentencePiece (`google-t5/t5-small`) | LlamaIndex `SentenceSplitter` |
+
+Install dependencies and start the Python API and SolidJS frontend together:
+
+```bash
+./scripts/launch_app.sh
+```
+
+The launcher runs frozen `uv` and Bun installs before starting Uvicorn and Vite,
+so both environments are reconciled whenever their lockfiles change. Stopping
+the launcher stops both services. Pass Vite options such as `--host 0.0.0.0`
+directly to the script when needed.
+
+Open `http://localhost:5173/document-preparation`. Paste text or load a `.txt`
+or `.md` file, select one to four unique pairs, and run the comparison. Each
+card updates twice: decoded document tokens appear as soon as tokenization
+finishes, followed by decoded tokens grouped inside every chunk.
+
+Hugging Face, SentencePiece, and Chonkie's local semantic model download their
+artifacts on first use and reuse the local cache afterward. No document text is
+persisted by the API. See `.env.example` to change the representative models,
+provide a local SentencePiece model, or configure browser origins.
 
 ## Run the demo
 

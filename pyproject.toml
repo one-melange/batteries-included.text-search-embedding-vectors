@@ -5,15 +5,26 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "chonkie[semantic]",
     "fastembed>=0.8.0",
+    "fastapi",
+    "huggingface-hub",
+    "langchain-text-splitters",
+    "llama-index-core",
     "psutil>=7.2.2",
     "pydantic>=2.13.4",
     "qdrant-client>=1.18.0",
+    "quicktok-v1",
+    "semchunk",
+    "sentencepiece",
     "tiktoken>=0.13.0",
+    "tokenizers",
+    "uvicorn",
 ]
 
 [dependency-groups]
 dev = [
+    "httpx",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
 ]
